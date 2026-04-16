@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Carelyn Job Portal</title>
+<link rel="stylesheet" href="/css/style.css">
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family: Arial, sans-serif;
+}
+
+/* NAVBAR */
+.navbar{
+display:flex;
+justify-content:space-between;
+align-items:center;
+padding:15px 40px;
+background:#2f5bd3;
+color:white;
+}
+
+.logo{
+display:flex;
+align-items:center;
+gap:10px;
+font-size:20px;
+font-weight:bold;
+}
+
+.logo img{
+width:40px;
+height:40px;
+border-radius:50%;
+}
+
+.nav-links{
+display:flex;
+list-style:none;
+gap:25px;
+}
+
+.nav-links a{
+color:white;
+text-decoration:none;
+}
+
+.auth{
+display:flex;
+align-items:center;
+position:relative;
+}
+
+.auth a{
+margin-left:15px;
+color:white;
+text-decoration:none;
+}
+
+.auth .btn{
+background:white;
+color:#2f5bd3;
+padding:8px 15px;
+border-radius:6px;
+}
+
+/* PROFILE */
+#profile-icon{
+width:35px;
+height:35px;
+border-radius:50%;
+background:white;
+color:#2f5bd3;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:bold;
+cursor:pointer;
+margin-left:10px;
+}
+
+/* DROPDOWN */
+#dropdown-menu{
+position:absolute;
+top:45px;
+right:0;
+background:white;
+color:black;
+width:150px;
+border-radius:8px;
+box-shadow:0 4px 10px rgba(0,0,0,0.2);
+display:none;
+}
+
+#dropdown-menu p{
+margin:0;
+padding:10px;
+cursor:pointer;
+}
+
+#dropdown-menu p:hover{
+background:#f0f0f0;
+}
+
+/* HERO */
+.hero{
+text-align:center;
+padding:80px 20px;
+background:#f5f7fb;
+}
+
+.search-box{
+display:flex;
+justify-content:center;
+gap:10px;
+margin-top:20px;
+}
+
+.search-box input{
+padding:10px;
+border-radius:6px;
+border:1px solid #ccc;
+}
+
+.search-box button{
+background:#2f5bd3;
+color:white;
+border:none;
+padding:10px 20px;
+border-radius:6px;
+}
+
+/* JOB LIST CONTAINER */
+#job-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 0 20px;
+  justify-content: center;
+}
+
+/* JOB CARD */
+.job-card {
+  background: white;
+  width: 280px;
+  padding: 24px 20px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  border-top: 4px solid #2f5bd3;
+  text-align: center;
+}
+
+.job-card h3 {
+  font-size: 17px;
+  font-weight: 700;
+  color: #1a1a2e;
+  margin: 0;
+}
+
+.job-card .company {
+  font-size: 14px;
+  color: #555;
+  margin: 0;
+}
+
+.job-card .location {
+  font-size: 13px;
+  color: #888;
+  margin: 0;
+}
+
+.job-card button {
+  margin-top: 10px;
+  background: #2f5bd3;
+  color: white;
+  border: none;
+  padding: 10px 22px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.job-card button:disabled {
+  background: #28a745;
+  cursor: default;
+}
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+
+<div class="logo">
+<img src="/images/logo.png">
+<span>Carelyn</span>
+</div>
+
+<ul class="nav-links">
+<li><a href="/index.html">Home</a></li>
+<li><a href="/jobs.html">Jobs</a></li>
+<li><a href="/companies.html">Companies</a></li>
+<li><a href="/services.html">Services</a></li>
+</ul>
+
+<div class="auth">
+
+<a href="/login.html" id="login-link">Login</a>
+<a href="/signup.html" class="btn" id="signup-link">Signup</a>
+
+<div id="profile-box" style="display:none;">
+    <div id="profile-icon" onclick="toggleDropdown()"></div>
+
+    <div id="dropdown-menu">
+        <p onclick="editProfile()">Edit Profile</p>
+        <p onclick="logout()">Logout</p>
+        <p onclick="viewAppliedJobs()">Applied Jobs</p>
+    </div>
+</div>
+
+</div>
+
+</header>
+
+<!-- HERO -->
+<section class="hero">
+<h1>Find Your Dream Job</h1>
+<p>Explore thousands of jobs</p>
+
+<div class="search-box">
+<input type="text" placeholder="Skills">
+<input type="text" placeholder="Location">
+<button>Search</button>
+</div>
+</section>
+
+<h2 style="text-align:center;">Available Jobs</h2>
+<div id="job-list" style="display:flex; flex-wrap:wrap; gap:20px; justify-content:center; padding:20px;"></div>
+
+<script>
+
+// ================= PROFILE =================
+const isLoggedIn = localStorage.getItem("isLoggedIn");
+const email = localStorage.getItem("userEmail");
+
+if(isLoggedIn === "true"){
+    document.getElementById("login-link").style.display = "none";
+    document.getElementById("signup-link").style.display = "none";
+
+    const profileBox = document.getElementById("profile-box");
+    const profileIcon = document.getElementById("profile-icon");
+
+    profileBox.style.display = "block";
+
+    if(email){
+        profileIcon.innerText = email.substring(0,2).toUpperCase();
+    }
+}
+
+// ================= DROPDOWN =================
+function toggleDropdown(){
+    const menu = document.getElementById("dropdown-menu");
+    menu.style.display = menu.style.display === "block" ? "none" : "block";
+}
+
+function editProfile(){
+    alert("Edit Profile coming soon 🚀");
+}
+function viewAppliedJobs(){
+    window.location.href = "/applied-jobs.html";
+}
+
+function logout(){
+    localStorage.clear();
+    window.location.href = "/login.html";
+}
+
+window.addEventListener("click", function(e){
+    const box = document.getElementById("profile-box");
+    const menu = document.getElementById("dropdown-menu");
+
+    if(box && !box.contains(e.target)){
+        menu.style.display = "none";
+    }
+});
+
+// ================= LOAD JOBS =================
+fetch("http://localhost:8080/api/jobs")
+.then(res => res.json())
+.then(jobs => {
+    const jobList = document.getElementById("job-list");
+    jobList.innerHTML = "";
+
+    jobs.forEach(job => {
+        const div = document.createElement("div");
+        div.className = "job-card";
+
+        div.innerHTML = `
+            <h3>${job.title}</h3>
+            <p class="company">${job.company}</p>
+            <p class="location">📍 ${job.location}</p>
+            <button onclick="applyJob(${job.id})">Apply</button>
+        `;
+
+        jobList.appendChild(div);
+    });
+});
+
+// ================= APPLY =================
+function applyJob(jobId){
+    if(localStorage.getItem("isLoggedIn") !== "true"){
+        alert("Please login first ❌");
+        window.location.href = "/login.html";
+        return;
+    }
+
+    fetch("http://localhost:8080/api/applications",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json"
+        },
+        body: JSON.stringify({
+            userEmail: localStorage.getItem("userEmail"),
+            jobId: jobId
+        })
+    })
+    .then(res => {
+        if(res.ok){
+            let appliedJobs = JSON.parse(localStorage.getItem("appliedJobs")) || [];
+            appliedJobs.push(String(jobId));
+            localStorage.setItem("appliedJobs", JSON.stringify(appliedJobs));
+            alert("Applied Successfully ✅");
+            location.reload();
+        } else {
+            alert("Failed to apply ❌");
+        }
+    });
+}
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Services - Carelyn</title>
+<link rel="stylesheet" href="/css/style.css">
+<style>
+
+* { margin:0; padding:0; box-sizing:border-box; font-family: Arial, sans-serif; }
+
+body { background: #f4f6f9; }
+
+/* HERO BANNER */
+.services-hero {
+  background: linear-gradient(135deg, #2f5bd3, #1a3a8f);
+  color: white;
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.services-hero h1 { font-size: 36px; margin-bottom: 10px; }
+.services-hero p { font-size: 16px; opacity: 0.85; }
+
+/* SECTION TITLE */
+.section-title {
+  text-align: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 40px 0 20px;
+  color: #1a1a2e;
+}
+
+/* SERVICES GRID */
+.services-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+  max-width: 1100px;
+  margin: 0 auto 50px;
+  padding: 0 20px;
+  justify-content: center;
+}
+
+/* SERVICE CARD */
+.service-card {
+  background: white;
+  width: 280px;
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  overflow: hidden;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.service-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.14);
+}
+
+.card-top {
+  padding: 28px 24px 16px;
+  text-align: center;
+}
+
+.card-icon {
+  font-size: 40px;
+  margin-bottom: 12px;
+}
+
+.card-top h3 {
+  font-size: 18px;
+  color: #1a1a2e;
+  margin-bottom: 8px;
+}
+
+.card-top p {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.card-links {
+  padding: 14px 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.card-links a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: opacity 0.2s;
+}
+
+.card-links a:hover { opacity: 0.85; }
+
+.btn-primary { background: #2f5bd3; color: white; }
+.btn-secondary { background: #f0f4ff; color: #2f5bd3; border: 1px solid #c8d6ff; }
+.btn-red { background: #ff0000; color: white; }
+.btn-green { background: #1db954; color: white; }
+
+/* COMPANIES SECTION */
+.companies-section {
+  background: white;
+  padding: 40px 20px;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.companies-section h2 {
+  font-size: 24px;
+  color: #1a1a2e;
+  margin-bottom: 24px;
+}
+
+.companies-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+  max-width: 900px;
+  margin: auto;
+}
+
+.company-chip {
+  background: #f0f4ff;
+  color: #2f5bd3;
+  padding: 10px 20px;
+  border-radius: 30px;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s;
+}
+
+.company-chip:hover { background: #2f5bd3; color: white; }
+
+/* TIPS SECTION */
+.tips-section {
+  max-width: 1100px;
+  margin: 0 auto 50px;
+  padding: 0 20px;
+}
+
+.tips-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  justify-content: center;
+}
+
+.tip-card {
+  background: white;
+  border-radius: 12px;
+  padding: 20px 24px;
+  width: 320px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+  border-left: 4px solid #2f5bd3;
+}
+
+.tip-card h4 { font-size: 15px; color: #1a1a2e; margin-bottom: 6px; }
+.tip-card p { font-size: 13px; color: #666; line-height: 1.5; }
+
+</style>
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+<header class="navbar">
+<div class="logo">
+  <img src="/images/logo.png">
+  <span>Carelyn</span>
+</div>
+
+<ul class="nav-links">
+  <li><a href="/index.html">Home</a></li>
+  <li><a href="/jobs.html">Jobs</a></li>
+  <li><a href="/companies.html">Companies</a></li>
+  <li><a href="/services.html">Services</a></li>
+</ul>
+
+<div class="auth">
+  <a href="/login.html" id="login-link">Login</a>
+  <a href="/signup.html" class="btn" id="signup-link">Signup</a>
+  <div id="profile-box" style="display:none;">
+    <div id="profile-icon" onclick="toggleDropdown()"></div>
+    <div id="dropdown-menu">
+      <p onclick="window.location.href='/profile.html'">Profile</p>
+      <p onclick="window.location.href='/applied-jobs.html'">Applied Jobs</p>
+      <p onclick="logout()">Logout</p>
+    </div>
+  </div>
+</div>
+</header>
+
+<!-- HERO -->
+<div class="services-hero">
+  <h1>🚀 Career Services</h1>
+  <p>Everything you need to land your dream job — all in one place</p>
+</div>
+
+<!-- SERVICES CARDS -->
+<h2 class="section-title">Our Services</h2>
+<div class="services-grid">
+
+  <!-- Resume Builder -->
+  <div class="service-card">
+    <div class="card-top">
+      <div class="card-icon">📄</div>
+      <h3>Resume Builder</h3>
+      <p>Create a professional ATS-friendly resume in minutes with top tools</p>
+    </div>
+    <div class="card-links">
+      <a href="https://www.canva.com/resumes/templates/" target="_blank" class="btn-primary">🎨 Canva Resume Templates</a>
+      <a href="https://resumegenius.com/" target="_blank" class="btn-secondary">⚡ Resume Genius</a>
+      <a href="https://www.youtube.com/watch?v=y8YH0Qbu5h4" target="_blank" class="btn-red">▶ Resume Tips on YouTube</a>
+    </div>
+  </div>
+
+  <!-- Interview Preparation -->
+  <div class="service-card">
+    <div class="card-top">
+      <div class="card-icon">🎤</div>
+      <h3>Interview Preparation</h3>
+      <p>Practice common interview questions and ace your next interview</p>
+    </div>
+    <div class="card-links">
+      <a href="https://www.interviewbit.com/" target="_blank" class="btn-primary">💻 InterviewBit</a>
+      <a href="https://leetcode.com/" target="_blank" class="btn-secondary">🧠 LeetCode Practice</a>
+      <a href="https://www.youtube.com/watch?v=HG68Ymazo18" target="_blank" class="btn-red">▶ Interview Tips YouTube</a>
+    </div>
+  </div>
+
+  <!-- Career Guidance -->
+  <div class="service-card">
+    <div class="card-top">
+      <div class="card-icon">🧭</div>
+      <h3>Career Guidance</h3>
+      <p>Explore career paths, roadmaps and get expert advice for your field</p>
+    </div>
+    <div class="card-links">
+      <a href="https://roadmap.sh/" target="_blank" class="btn-primary">🗺️ Developer Roadmaps</a>
+      <a href="https://www.linkedin.com/learning/" target="_blank" class="btn-secondary">📚 LinkedIn Learning</a>
+      <a href="https://www.youtube.com/@FreeCodeCamp" target="_blank" class="btn-red">▶ freeCodeCamp YouTube</a>
+    </div>
+  </div>
+
+  <!-- Mock Interviews -->
+  <div class="service-card">
+    <div class="card-top">
+      <div class="card-icon">🤝</div>
+      <h3>Mock Interviews</h3>
+      <p>Practice with real interview scenarios and get instant feedback</p>
+    </div>
+    <div class="card-links">
+      <a href="https://www.pramp.com/" target="_blank" class="btn-primary">🎯 Pramp - Free Mock</a>
+      <a href="https://www.glassdoor.co.in/index.htm" target="_blank" class="btn-secondary">🔍 Glassdoor Reviews</a>
+      <a href="https://www.youtube.com/watch?v=1qw5ITr3k9E" target="_blank" class="btn-red">▶ Mock Interview YouTube</a>
+    </div>
+  </div>
+
+  <!-- Skill Development -->
+  <div class="service-card">
+    <div class="card-top">
+      <div class="card-icon">📈</div>
+      <h3>Skill Development</h3>
+      <p>Learn in-demand skills with free and paid courses from top platforms</p>
+    </div>
+    <div class="card-links">
+      <a href="https://www.coursera.org/" target="_blank" class="btn-primary">🎓 Coursera</a>
+      <a href="https://www.udemy.com/" target="_blank" class="btn-secondary">⚡ Udemy Courses</a>
+      <a href="https://www.youtube.com/@ApnaCollegeOfficial" target="_blank" class="btn-red">▶ Apna College YouTube</a>
+    </div>
+  </div>
+
+  <!-- Salary Insights -->
+  <div class="service-card">
+    <div class="card-top">
+      <div class="card-icon">💰</div>
+      <h3>Salary Insights</h3>
+      <p>Know your market worth and negotiate better with salary data</p>
+    </div>
+    <div class="card-links">
+      <a href="https://www.ambitionbox.com/salaries" target="_blank" class="btn-primary">💼 AmbitionBox Salaries</a>
+      <a href="https://www.glassdoor.co.in/Salaries/index.htm" target="_blank" class="btn-secondary">📊 Glassdoor Salaries</a>
+      <a href="https://www.youtube.com/watch?v=XY5SeCl_8NE" target="_blank" class="btn-red">▶ Salary Negotiation Tips</a>
+    </div>
+  </div>
+
+</div>
+
+<!-- TOP COMPANIES -->
+<div class="companies-section">
+  <h2>🏢 Explore Top Companies</h2>
+  <div class="companies-grid">
+    <a href="https://careers.google.com/" target="_blank" class="company-chip">Google</a>
+    <a href="https://www.amazon.jobs/en/" target="_blank" class="company-chip">Amazon</a>
+    <a href="https://careers.microsoft.com/" target="_blank" class="company-chip">Microsoft</a>
+    <a href="https://www.infosys.com/careers/" target="_blank" class="company-chip">Infosys</a>
+    <a href="https://www.tcs.com/careers" target="_blank" class="company-chip">TCS</a>
+    <a href="https://www.wipro.com/careers/" target="_blank" class="company-chip">Wipro</a>
+    <a href="https://www.flipkartcareers.com/" target="_blank" class="company-chip">Flipkart</a>
+    <a href="https://www.metacareers.com/" target="_blank" class="company-chip">Meta</a>
+    <a href="https://www.accenture.com/in-en/careers" target="_blank" class="company-chip">Accenture</a>
+    <a href="https://careers.swiggy.com/" target="_blank" class="company-chip">Swiggy</a>
+    <a href="https://www.zomato.com/careers" target="_blank" class="company-chip">Zomato</a>
+    <a href="https://razorpay.com/jobs/" target="_blank" class="company-chip">Razorpay</a>
+  </div>
+</div>
+
+<!-- QUICK TIPS -->
+<h2 class="section-title">💡 Quick Career Tips</h2>
+<div class="tips-section">
+  <div class="tips-grid">
+    <div class="tip-card">
+      <h4>✅ Keep your resume to 1 page</h4>
+      <p>Recruiters spend only 6-7 seconds on a resume. Keep it crisp, clean and relevant.</p>
+    </div>
+    <div class="tip-card">
+      <h4>🔗 Optimize your LinkedIn profile</h4>
+      <p>Add a professional photo, headline and skills. 87% of recruiters use LinkedIn.</p>
+    </div>
+    <div class="tip-card">
+      <h4>🎯 Apply to jobs within 24 hours</h4>
+      <p>Early applicants are 4x more likely to get an interview. Don't wait!</p>
+    </div>
+    <div class="tip-card">
+      <h4>📝 Customize resume per job</h4>
+      <p>Match keywords from the job description to pass ATS screening filters.</p>
+    </div>
+    <div class="tip-card">
+      <h4>🤝 Network actively</h4>
+      <p>80% of jobs are filled through networking. Connect with people in your field.</p>
+    </div>
+    <div class="tip-card">
+      <h4>💪 Practice DSA daily</h4>
+      <p>Solve at least 1-2 problems daily on LeetCode or HackerRank to stay sharp.</p>
+    </div>
+  </div>
+</div>
+
+<script src="/js/script.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carelyn - Cloud-Based Job Portal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        /* PURE WHITE THEME */
+        * { box-sizing: border-box; }
+        p { margin: 0 0 15px 0; }
+        
+        body {
+            background-color: #f3f4f6; /* Very light gray for the backdrop outside slides */
+            display: grid;
+            gap: 30px;
+            grid-template-columns: 1fr;
+            margin: 0;
+            min-height: 100vh;
+            padding: 30px 0;
+            place-items: center;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .slide-container {
+            align-items: flex-start;
+            background-color: #ffffff; /* PURE WHITE */
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            height: 720px;
+            justify-content: flex-start;
+            overflow: hidden;
+            padding: 60px;
+            position: relative;
+            width: 1280px;
+        }
+
+        /* TYPOGRAPHY */
+        .slide-container h1, .slide-container h2, .slide-container h3 {
+            color: #111827; /* Near Black */
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+        }
+
+        .slide-container p, .slide-container li {
+            color: #374151; /* Dark Gray */
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        .slide-container h1 { font-size: 80px; line-height: 1.1; }
+        .slide-container h3 { font-size: 28px; margin-bottom: 15px; }
+
+        .slide-title {
+            font-size: 44px;
+            font-weight: 600;
+            margin-bottom: 40px;
+            width: 100%;
+            border-bottom: 2px solid #0ea5e9; /* Light blue accent line */
+            padding-bottom: 15px;
+        }
+
+        .slide-title span { color: #0ea5e9; } /* Sky Blue 500 */
+
+        .content-area {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            justify-content: center;
+            width: 100%;
+        }
+
+        /* LAYOUTS */
+        .title-layout {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            justify-content: center;
+            text-align: center;
+            width: 100%;
+        }
+
+        .project-type {
+            color: #0ea5e9;
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .main-subtitle { font-size: 24px; color: #6b7280; margin-top: 10px; }
+
+        .title-meta-footer {
+            margin-top: 60px;
+            padding-top: 40px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            width: 900px;
+            text-align: left;
+        }
+
+        .meta-block p.label { font-size: 14px; color: #6b7280; text-transform: uppercase; margin-bottom: 8px; }
+        .meta-block p.value { font-size: 22px; color: #111827; font-weight: 600; margin-bottom: 4px; }
+        .meta-block p.sub-value { font-size: 15px; color: #4b5563; }
+        .meta-block.right { text-align: right; }
+
+        /* Two Column Tiled Text Layout */
+        .two-column { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; width: 100%; }
+        .two-column.tiled > div { background-color: #f9fafb; border: 1px solid #e5e7eb; border-radius: 8px; padding: 40px; }
+        .two-column.tiled h3 { color: #0ea5e9; }
+
+        /* Bullet Points */
+        .bullet-list { width: 100%; }
+        .bullet-list ul { list-style: none; margin: 0; padding: 0; }
+        .bullet-list li {
+            margin-bottom: 25px;
+            background-color: #ffffff;
+            padding: 25px 30px 25px 70px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            border-left: 5px solid #0ea5e9;
+            position: relative;
+        }
+        .bullet-list i {
+            color: #0ea5e9;
+            font-size: 24px;
+            left: 25px;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+        .bullet-list li strong { color: #111827; font-size: 20px; display: block; margin-bottom: 5px; }
+
+        /* Image Layout */
+        .two-column.image-layout { align-items: center; }
+        .two-column.image-layout .text-content { padding-right: 20px; }
+        .image-wrapper {
+            border-radius: 8px;
+            height: 400px;
+            overflow: hidden;
+            border: 1px solid #e5e7eb;
+        }
+        .image-wrapper img { height: 100%; width: 100%; object-fit: cover; }
+
+        /* Tiled Content */
+        .tiled-content { display: flex; gap: 30px; width: 100%; }
+        .tile {
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            flex: 1;
+            padding: 40px 30px;
+        }
+        .tile .icon {
+            color: #0ea5e9;
+            font-size: 35px;
+            margin-bottom: 20px;
+        }
+        .tag {
+            display: inline-block;
+            background-color: #f3f4f6;
+            color: #374151;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 14px;
+            margin-right: 8px; margin-bottom: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        /* Timeline */
+        .timeline-layout { display: flex; position: relative; width: 100%; margin-top: 40px; justify-content: space-between; }
+        .timeline-line { background-color: #e5e7eb; height: 4px; position: absolute; top: 50%; width: 100%; z-index: 0; }
+        .timeline-item { position: relative; width: 23%; text-align: center; }
+        .timeline-item::after {
+            background-color: #ffffff;
+            border: 4px solid #0ea5e9;
+            border-radius: 50%;
+            content: ''; height: 20px; width: 20px;
+            left: 50%; position: absolute; top: 50%;
+            transform: translate(-50%, -50%); z-index: 1;
+        }
+        .content-wrapper {
+            background-color: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 20px;
+            position: absolute;
+            width: 100%;
+        }
+        .timeline-item:nth-child(odd) .content-wrapper { bottom: 50%; margin-bottom: 30px; }
+        .timeline-item:nth-child(even) .content-wrapper { top: 50%; margin-top: 30px; }
+        .timeline-item h3 { color: #0ea5e9; font-size: 18px; margin-bottom: 8px; }
+
+        /* Bleed Image */
+        .slide-container.bleed-image-layout { display: grid; grid-template-columns: 1fr 1fr; padding: 0; gap: 50px; }
+        .content-container { padding: 60px; display: flex; flex-direction: column; }
+        .image-container img { height: 720px; width: 100%; object-fit: cover; }
+    </style>
+</head>
+<body>
+
+<div class="slide-container">
+    <div class="title-layout">
+        <p class="project-type">A Synopsis of Major Project</p>
+        <h1>Carelyn</h1>
+        <p class="main-subtitle">A Cloud-Based Job Portal System</p>
+        
+        <div class="title-meta-footer">
+            <div class="meta-block">
+                <p class="label">Submitted By</p>
+                <p class="value">Gireesh Mohan Mishra</p>
+                <p class="sub-value">(LNCDBTC11088) • Session: Jan-June 2026</p>
+            </div>
+            <div class="meta-block right">
+                <p class="label">Institution</p>
+                <p class="value">LNCT University</p>
+                <p class="sub-value">School of Computer, Science & Technology</p>
+                <p class="sub-value">Bhopal (M.P.), India</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container">
+    <h2 class="slide-title">The Challenge & <span>The Solution</span></h2>
+    <div class="content-area">
+        <div class="two-column tiled">
+            <div>
+                <h3>What is Carelyn?</h3>
+                <p>Carelyn is a cloud-based job portal system specifically developed to simplify and automate the entire recruitment process.</p>
+                <p>By digitizing the recruitment workflow, it provides a centralized environment enhancing efficiency, transparency, and the overall user experience.</p>
+            </div>
+            <div>
+                <h3 style="color: #ef4444;">The Problem Statement</h3>
+                <p>In today's digital era, job seekers and recruiters face significant challenges:</p>
+                <p>• Scattered job information and inefficient tracking.<br>
+                   • Lack of transparency in traditional manual processes.<br>
+                   • Poor scalability and limited real-time interaction.<br>
+                   • Persistent security issues in existing portals.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container">
+    <h2 class="slide-title">Project <span>Objectives</span></h2>
+    <div class="content-area">
+        <div class="bullet-list">
+            <ul>
+                <li>
+                    <i class="fa-solid fa-cloud"></i>
+                    <strong>Centralized Cloud Platform</strong>
+                    To develop a centralized, cloud-based job portal system ensuring high availability and easy access.
+                </li>
+                <li>
+                    <i class="fa-solid fa-users"></i>
+                    <strong>Simplified Experience</strong>
+                    To simplify the job search and application processes for job seekers and providing recruiters with efficient tools.
+                </li>
+                <li>
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <strong>Security & Access Control</strong>
+                    To ensure secure authentication and strict role-based access for different types of users.
+                </li>
+                <li>
+                    <i class="fa-solid fa-server"></i>
+                    <strong>Scalability & Performance</strong>
+                    To vastly improve system scalability, overall performance, and uptime reliability utilizing modern cloud infrastructure.
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container">
+    <h2 class="slide-title">Proposed <span>Architecture</span></h2>
+    <div class="content-area">
+        <div class="two-column image-layout">
+            <div class="text-content">
+                <p>The solution is a Cloud-Enabled Intelligent Job Portal utilizing a robust three-tier architecture ensuring modularity, scalability, and ease of maintenance.</p>
+                <br>
+                <p><strong>Presentation Layer:</strong> A responsive, user-friendly frontend enabling users to create profiles, utilize robust search filters, and apply dynamically.</p>
+                <p><strong>Application Layer:</strong> Powered by a RESTful backend architecture, it securely handles complex business logic, user authentication, and application processing.</p>
+                <p><strong>Database & Cloud Layer:</strong> A structured relational database ensuring data consistency, designed to handle high user volumes.</p>
+            </div>
+            <div>
+                <div class="image-wrapper">
+                    <img src="http://googleusercontent.com/image_collection/image_retrieval/278108437094742225" alt="Abstract cloud computing architecture diagram">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container">
+    <h2 class="slide-title">Technology <span>Stack</span></h2>
+    <div class="content-area">
+        <div class="tiled-content">
+            <div class="tile">
+                <div class="icon"><i class="fa-brands fa-react"></i></div>
+                <h3>Frontend</h3>
+                <p>Delivering a highly responsive and dynamic user interface.</p>
+                <div style="margin-top: 15px;">
+                    <span class="tag">React.js</span>
+                    <span class="tag">HTML5</span>
+                    <span class="tag">CSS / JS</span>
+                </div>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-brands fa-java"></i></div>
+                <h3>Backend</h3>
+                <p>Handling business logic, robust APIs, and tight security.</p>
+                <div style="margin-top: 15px;">
+                    <span class="tag">Java (JDK 17)</span>
+                    <span class="tag">Spring Boot</span>
+                    <span class="tag">RESTful APIs</span>
+                </div>
+            </div>
+            <div class="tile">
+                <div class="icon"><i class="fa-solid fa-database"></i></div>
+                <h3>Database & Tools</h3>
+                <p>Ensuring data integrity and smooth development pipelines.</p>
+                <div style="margin-top: 15px;">
+                    <span class="tag">MySQL Server</span>
+                    <span class="tag">GitHub</span>
+                    <span class="tag">Maven</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container">
+    <h2 class="slide-title">System <span>Workflow</span></h2>
+    <div class="content-area">
+        <div class="timeline-layout">
+            <div class="timeline-line"></div>
+            <div class="timeline-item">
+                <div class="content-wrapper">
+                    <h3>1. Onboarding</h3>
+                    <p>Secure Registration mapping to Role-Based Dashboards.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="content-wrapper">
+                    <h3>2. Job Creation</h3>
+                    <p>Recruiters seamlessly draft and post structured vacancies.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="content-wrapper">
+                    <h3>3. Engagement</h3>
+                    <p>Job Seekers filter, apply, and applications are stored securely.</p>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="content-wrapper">
+                    <h3>4. Resolution</h3>
+                    <p>Recruiters review status, triggering Real-Time Notifications.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="slide-container bleed-image-layout">
+    <div class="content-container">
+        <h2 class="slide-title">Outcomes & <span>Roadmap</span></h2>
+        <div class="content-area">
+            <div>
+                <h3 style="color: #0ea5e9;">Expected Outcomes</h3>
+                <p>Carelyn will deliver a fully functional, cloud-based portal that centralizes job and application management. It ensures improved recruitment efficiency and a robust, scalable system architecture.</p>
+                <br>
+                <h3 style="color: #0ea5e9;">Future Enhancements</h3>
+                <p>To continually evolve the platform, our future roadmap integrates cutting-edge technologies to streamline the modern hiring experience.</p>
+                <div style="margin-top: 15px;">
+                    <span class="tag"><i class="fa-solid fa-brain" style="color:#0ea5e9;"></i> AI Recommendations</span>
+                    <span class="tag"><i class="fa-solid fa-file-pdf" style="color:#0ea5e9;"></i> Resume Parsing</span>
+                    <span class="tag"><i class="fa-solid fa-comments" style="color:#0ea5e9;"></i> In-App Chat</span>
+                    <span class="tag"><i class="fa-solid fa-mobile-screen" style="color:#0ea5e9;"></i> Mobile App</span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="image-container">
+        <img src="http://googleusercontent.com/image_collection/image_retrieval/5785075297546370627" alt="Futuristic artificial intelligence glowing digital network">
+    </div>
+</div>
+
+</body>
+</html>

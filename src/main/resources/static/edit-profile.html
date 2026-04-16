@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Edit Profile</title>
+<link rel="stylesheet" href="/css/style.css">
+
+<style>
+.container {
+    max-width: 500px;
+    margin: 50px auto;
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+}
+input {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+}
+button {
+    width: 100%;
+    padding: 10px;
+    background: #2f5bd3;
+    color: white;
+    border: none;
+}
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+<h2>Edit Profile</h2>
+
+<input type="text" id="name" placeholder="Name">
+<input type="email" id="email" disabled>
+
+<button onclick="saveProfile()">Save</button>
+
+</div>
+
+<script>
+
+// 🔥 LOAD DATA
+const email = localStorage.getItem("userEmail");
+
+fetch(`http://localhost:8080/api/users/${email}`)
+.then(res => res.json())
+.then(user => {
+    document.getElementById("name").value = user.name;
+    document.getElementById("email").value = user.email;
+});
+
+
+// 🔥 SAVE DATA
+function saveProfile(){
+
+    const name = document.getElementById("name").value;
+    const email = document.getElementById("email").value;
+
+    fetch("http://localhost:8080/api/users/update", {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+            name: name,
+            email: email
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+
+        alert("Updated ✅");
+
+        // 🔥 update localStorage
+        localStorage.setItem("userName", data.name);
+
+        window.location.href = "index.html";
+    });
+}
+</script>
+
+</body>
+</html>
