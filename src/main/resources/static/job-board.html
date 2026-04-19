@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Job Board – Carelyn</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Segoe UI', Arial, sans-serif; background: #f4f6f9; color: #1a1a2e; min-height: 100vh; }
+    .navbar { background: #fff; border-bottom: 1px solid #e2e6ea; padding: 0 2rem; height: 60px; display: flex; align-items: center; position: sticky; top: 0; z-index: 100; }
+    .navbar .logo { font-size: 20px; font-weight: 700; color: #185FA5; }
+    .navbar .logo span { color: #1D9E75; }
+    .hero { background: linear-gradient(135deg, #185FA5 0%, #0c3d6e 100%); color: #fff; text-align: center; padding: 3rem 1rem 2.5rem; }
+    .hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .hero p  { font-size: 1rem; opacity: 0.85; }
+    .tab-bar { display: flex; max-width: 860px; margin: -1.4rem auto 0; background: #fff; border-radius: 14px 14px 0 0; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); }
+    .tab { flex: 1; padding: 14px 0; font-size: 15px; font-weight: 600; border: none; background: #fff; color: #888; cursor: pointer; border-bottom: 3px solid transparent; }
+    .tab.active { color: #185FA5; border-bottom: 3px solid #185FA5; }
+    .main { max-width: 860px; margin: 0 auto; padding: 0 1rem 3rem; background: #fff; border-radius: 0 0 14px 14px; box-shadow: 0 2px 12px rgba(0,0,0,0.08); min-height: 520px; }
+    .panel { display: none; padding: 2rem 0 1rem; }
+    .panel.active { display: block; }
+    .card { background: #f8fafc; border: 1px solid #e2e6ea; border-radius: 12px; padding: 1.5rem; margin-bottom: 1.5rem; }
+    .card-title { font-size: 16px; font-weight: 600; padding-bottom: 0.75rem; margin-bottom: 1.25rem; border-bottom: 1px solid #e2e6ea; }
+    .field { margin-bottom: 1.1rem; }
+    .field label { display: block; font-size: 13px; font-weight: 500; color: #555; margin-bottom: 6px; }
+    .field input, .field textarea, .field select { width: 100%; padding: 10px 14px; font-size: 14px; border: 1.5px solid #dce1e7; border-radius: 8px; background: #fff; color: #1a1a2e; outline: none; font-family: inherit; transition: border-color 0.2s; }
+    .field input:focus, .field textarea:focus, .field select:focus { border-color: #185FA5; box-shadow: 0 0 0 3px rgba(24,95,165,0.1); }
+    .field textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+    .row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+    @media(max-width:540px){ .row-2 { grid-template-columns: 1fr; } }
+    .skill-input-row { display: flex; gap: 8px; }
+    .skill-input-row input { flex: 1; }
+    .add-skill-btn { padding: 10px 16px; font-size: 13px; font-weight: 600; background: #e8f0fb; color: #185FA5; border: none; border-radius: 8px; cursor: pointer; white-space: nowrap; }
+    .add-skill-btn:hover { background: #d0e3f5; }
+    .skills-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .skill-tag { display: inline-flex; align-items: center; gap: 6px; background: #e8f0fb; color: #0C447C; font-size: 13px; padding: 4px 12px; border-radius: 999px; font-weight: 500; }
+    .skill-tag button { background: none; border: none; cursor: pointer; color: #185FA5; font-size: 15px; padding: 0; }
+    .btn-primary { width: 100%; padding: 13px; font-size: 15px; font-weight: 600; background: #185FA5; color: #fff; border: none; border-radius: 10px; cursor: pointer; margin-top: 0.5rem; font-family: inherit; transition: background 0.15s; }
+    .btn-primary:hover { background: #0C447C; }
+    .btn-primary.green { background: #1D9E75; }
+    .btn-primary.green:hover { background: #0F6E56; }
+    .btn-primary:disabled { background: #aaa; cursor: not-allowed; }
+    .btn-secondary { padding: 9px 20px; font-size: 13px; font-weight: 600; background: #fff; color: #185FA5; border: 1.5px solid #185FA5; border-radius: 8px; cursor: pointer; font-family: inherit; }
+    .btn-secondary:hover { background: #e8f0fb; }
+    .job-card { background: #fff; border: 1px solid #e2e6ea; border-radius: 12px; padding: 1.25rem 1.5rem; margin-bottom: 1.25rem; transition: box-shadow 0.2s; }
+    .job-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    .jc-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex-wrap: wrap; }
+    .jc-title { font-size: 17px; font-weight: 700; }
+    .jc-company { font-size: 14px; color: #555; margin-top: 3px; }
+    .open-badge { display: inline-flex; align-items: center; gap: 5px; background: #EAF3DE; color: #3B6D11; font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; }
+    .open-dot { width: 7px; height: 7px; background: #639922; border-radius: 50%; display: inline-block; }
+    .jc-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .jc-badge { font-size: 12px; background: #f0f4f8; color: #444; padding: 3px 10px; border-radius: 999px; font-weight: 500; }
+    .jc-badge.salary { background: #f0fdf4; color: #166534; }
+    .jc-desc { font-size: 13px; color: #666; line-height: 1.7; margin-top: 12px; border-top: 1px solid #f0f2f5; padding-top: 10px; }
+    .jc-skills-label { font-size: 12px; color: #888; margin: 10px 0 6px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+    .success-wrap { text-align: center; padding: 2.5rem 1rem; }
+    .success-icon { width: 60px; height: 60px; background: #EAF3DE; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+    .success-wrap h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .success-wrap p { font-size: 14px; color: #666; line-height: 1.6; }
+    .empty-state { text-align: center; padding: 3rem 1rem; color: #aaa; font-size: 14px; }
+    .loading { text-align: center; padding: 2rem; color: #888; font-size: 14px; }
+    .error-msg { background: #fff0f0; color: #a32d2d; border: 1px solid #f7c1c1; border-radius: 8px; padding: 10px 14px; font-size: 13px; margin-bottom: 1rem; }
+    hr.divider { border: none; border-top: 1px solid #eee; margin: 1.5rem 0; }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="logo">Work<span>Connect</span></div>
+</nav>
+
+<div class="hero">
+  <h1>Find Jobs. Hire Talent.</h1>
+  <p>Recruiters post jobs. Job seekers apply directly.</p>
+</div>
+
+<div class="tab-bar">
+  <button class="tab active" onclick="switchTab('recruiter')">&#128188; Post a Job (Recruiter)</button>
+  <button class="tab" onclick="switchTab('seeker')">&#128269; Browse & Apply (Job Seeker)</button>
+</div>
+
+<div class="main">
+
+  <!-- RECRUITER PANEL -->
+  <div id="panel-recruiter" class="panel active">
+    <div class="card" id="recruiter-form-card">
+      <div class="card-title">&#128221; Job posting details</div>
+      <div id="r-error" class="error-msg" style="display:none;"></div>
+
+      <div class="row-2">
+        <div class="field"><label>Job title *</label><input id="r-title" type="text" placeholder="e.g. Frontend Developer"/></div>
+        <div class="field"><label>Company name *</label><input id="r-company" type="text" placeholder="e.g. Infosys Pvt Ltd"/></div>
+      </div>
+      <div class="row-2">
+        <div class="field"><label>Location</label><input id="r-location" type="text" placeholder="e.g. Bhopal / Remote"/></div>
+        <div class="field"><label>Job type</label>
+          <select id="r-type">
+            <option>Full-time</option>
+            <option>Part-time</option>
+            <option>Internship</option>
+            <option>Freelance</option>
+            <option>Contract</option>
+          </select>
+        </div>
+      </div>
+      <div class="row-2">
+        <div class="field"><label>Recruiter contact number *</label><input id="r-phone" type="tel" placeholder="+91 98765 43210"/></div>
+        <div class="field"><label>Salary range</label><input id="r-salary" type="text" placeholder="e.g. ₹5–10 LPA / ₹25,000/month"/></div>
+      </div>
+      <div class="field"><label>Recruiter email</label><input id="r-email" type="email" placeholder="hr@company.com"/></div>
+      <div class="field"><label>Job description *</label><textarea id="r-desc" placeholder="Responsibilities, requirements, working hours..."></textarea></div>
+      <div class="field">
+        <label>Required skills</label>
+        <div class="skill-input-row">
+          <input id="r-skill-input" type="text" placeholder="e.g. React, Python..." onkeydown="if(event.key==='Enter'){addSkill();}"/>
+          <button class="add-skill-btn" onclick="addSkill()">+ Add Skill</button>
+        </div>
+        <div class="skills-wrap" id="skills-wrap"></div>
+      </div>
+      <button class="btn-primary" id="post-btn" onclick="postJob()">&#128640; Post Job Listing</button>
+    </div>
+  </div>
+
+  <!-- SEEKER PANEL -->
+  <div id="panel-seeker" class="panel">
+    <div id="job-listings-container"></div>
+    <div class="card" id="apply-form-card">
+      <div class="card-title">&#128203; Apply for a position</div>
+      <div id="s-error" class="error-msg" style="display:none;"></div>
+      <div class="field"><label>Select job *</label><select id="s-job"><option value="">-- Select a job --</option></select></div>
+      <div class="row-2">
+        <div class="field"><label>Your full name *</label><input id="s-name" type="text" placeholder="e.g. Rahul Sharma"/></div>
+        <div class="field"><label>Phone number *</label><input id="s-phone" type="tel" placeholder="+91 xxxxxxxxxx"/></div>
+      </div>
+      <div class="field"><label>Email address *</label><input id="s-email" type="email" placeholder="you@example.com"/></div>
+      <div class="field"><label>Why should we hire you?</label><textarea id="s-cover" placeholder="Briefly describe your experience..."></textarea></div>
+      <button class="btn-primary green" id="apply-btn" onclick="submitApplication()">&#9989; Submit Application</button>
+    </div>
+  </div>
+
+</div>
+
+<script>
+  var BASE_URL = 'http://localhost:8080/api/jobs';
+  var skills = [];
+
+  function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach(function(t, i) {
+      t.classList.toggle('active', (i === 0 && tab === 'recruiter') || (i === 1 && tab === 'seeker'));
+    });
+    document.getElementById('panel-recruiter').classList.toggle('active', tab === 'recruiter');
+    document.getElementById('panel-seeker').classList.toggle('active', tab === 'seeker');
+    if (tab === 'seeker') loadJobs();
+  }
+
+  function addSkill() {
+    var inp = document.getElementById('r-skill-input');
+    var val = inp.value.trim();
+    if (!val) return;
+    skills.push(val);
+    inp.value = '';
+    renderSkillTags();
+  }
+  function removeSkill(i) { skills.splice(i, 1); renderSkillTags(); }
+  function renderSkillTags() {
+    document.getElementById('skills-wrap').innerHTML = skills.map(function(s, i) {
+      return '<span class="skill-tag">' + s + '<button onclick="removeSkill(' + i + ')">&#215;</button></span>';
+    }).join('');
+  }
+
+  function postJob() {
+    var title   = document.getElementById('r-title').value.trim();
+    var company = document.getElementById('r-company').value.trim();
+    var desc    = document.getElementById('r-desc').value.trim();
+    var phone   = document.getElementById('r-phone').value.trim();
+    var errDiv  = document.getElementById('r-error');
+
+    errDiv.style.display = 'none';
+    if (!title || !company || !desc || !phone) {
+      errDiv.textContent = 'Please fill in all required fields (*)';
+      errDiv.style.display = 'block';
+      return;
+    }
+
+    var btn = document.getElementById('post-btn');
+    btn.disabled = true; btn.textContent = 'Posting...';
+
+    fetch(BASE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        title:          title,
+        company:        company,
+        location:       document.getElementById('r-location').value.trim(),
+        type:           document.getElementById('r-type').value,
+        description:    desc,
+        recruiterPhone: phone,
+        recruiterEmail: document.getElementById('r-email').value.trim(),
+        salaryRange:    document.getElementById('r-salary').value.trim(),
+        skills:         skills.slice()
+      })
+    })
+    .then(function(r) { if (!r.ok) throw new Error('Server error ' + r.status); return r.json(); })
+    .then(function() {
+      document.getElementById('recruiter-form-card').innerHTML =
+        '<div class="success-wrap">' +
+          '<div class="success-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>' +
+          '<h3>Job Posted Successfully!</h3>' +
+          '<p>Listing saved in database.<br>Job seekers can now view and apply.</p>' +
+          '<br><button class="btn-secondary" onclick="location.reload()">Post Another Job</button>' +
+        '</div>';
+    })
+    .catch(function(e) {
+      errDiv.textContent = 'Error: ' + e.message + '. Make sure Spring Boot is running.';
+      errDiv.style.display = 'block';
+      btn.disabled = false; btn.textContent = '🚀 Post Job Listing';
+    });
+  }
+
+  function loadJobs() {
+    var container = document.getElementById('job-listings-container');
+    var sel = document.getElementById('s-job');
+    container.innerHTML = '<div class="loading">&#9203; Loading jobs...</div>';
+
+    fetch(BASE_URL)
+    .then(function(r) { return r.json(); })
+    .then(function(jobs) {
+      if (!jobs.length) {
+        container.innerHTML = '<div class="empty-state">No jobs posted yet.</div>';
+        sel.innerHTML = '<option value="">-- No jobs available --</option>';
+        return;
+      }
+      sel.innerHTML = '<option value="">-- Select a job --</option>' +
+        jobs.map(function(j) {
+          return '<option value="' + j.id + '">' + j.title + ' — ' + j.company + '</option>';
+        }).join('');
+
+      container.innerHTML = jobs.map(function(j) {
+        var sk = (j.skills && j.skills.length)
+          ? '<div class="jc-skills-label">Required skills</div><div class="skills-wrap">' +
+              j.skills.map(function(s) { return '<span class="skill-tag">' + s + '</span>'; }).join('') +
+            '</div>' : '';
+        return '<div class="job-card">' +
+          '<div class="jc-header">' +
+            '<div><div class="jc-title">' + j.title + '</div>' +
+            '<div class="jc-company">' + j.company + (j.location ? ' &middot; ' + j.location : '') + '</div></div>' +
+            '<span class="open-badge"><span class="open-dot"></span>Open</span>' +
+          '</div>' +
+          '<div class="jc-meta">' +
+            '<span class="jc-badge">' + (j.type || 'Full-time') + '</span>' +
+            (j.salaryRange    ? '<span class="jc-badge salary">&#128176; ' + j.salaryRange + '</span>' : '') +
+            (j.recruiterPhone ? '<span class="jc-badge">&#128222; ' + j.recruiterPhone + '</span>' : '') +
+            (j.recruiterEmail ? '<span class="jc-badge">&#9993; ' + j.recruiterEmail + '</span>' : '') +
+          '</div>' + sk +
+          (j.description ? '<div class="jc-desc">' + j.description + '</div>' : '') +
+        '</div>';
+      }).join('') + '<hr class="divider">';
+    })
+    .catch(function() {
+      container.innerHTML = '<div class="error-msg">Could not load jobs. Make sure Spring Boot is running on port 8080.</div>';
+    });
+  }
+
+  function submitApplication() {
+    var name   = document.getElementById('s-name').value.trim();
+    var phone  = document.getElementById('s-phone').value.trim();
+    var email  = document.getElementById('s-email').value.trim();
+    var jobId  = document.getElementById('s-job').value;
+    var errDiv = document.getElementById('s-error');
+
+    errDiv.style.display = 'none';
+    if (!name || !phone || !email || !jobId) {
+      errDiv.textContent = 'Please fill in all required fields (*)';
+      errDiv.style.display = 'block';
+      return;
+    }
+
+    var btn = document.getElementById('apply-btn');
+    btn.disabled = true; btn.textContent = 'Submitting...';
+
+    fetch(BASE_URL + '/apply', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        jobId:          parseInt(jobId),
+        applicantName:  name,
+        applicantPhone: phone,
+        applicantEmail: email,
+        coverNote:      document.getElementById('s-cover').value.trim()
+      })
+    })
+    .then(function(r) { if (!r.ok) throw new Error('Server error ' + r.status); return r.text(); })
+    .then(function() {
+      document.getElementById('apply-form-card').innerHTML =
+        '<div class="success-wrap">' +
+          '<div class="success-icon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg></div>' +
+          '<h3>Application Submitted!</h3>' +
+          '<p>Saved in database.<br>Recruiter will contact you at <strong>' + phone + '</strong>.</p>' +
+        '</div>';
+    })
+    .catch(function(e) {
+      errDiv.textContent = 'Error: ' + e.message;
+      errDiv.style.display = 'block';
+      btn.disabled = false; btn.textContent = '✅ Submit Application';
+    });
+  }
+</script>
+</body>
+</html>

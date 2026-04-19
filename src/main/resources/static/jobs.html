@@ -1,17 +1,558 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Jobs</title>
-<link rel="stylesheet" href="/css/style.css">
-</head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Job Board – WorkConnect</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+    body {
+      font-family: 'Segoe UI', Arial, sans-serif;
+      background: #f4f6f9;
+      color: #1a1a2e;
+      min-height: 100vh;
+    }
+
+    /* ── NAVBAR ── */
+    .navbar {
+      background: #fff;
+      border-bottom: 1px solid #e2e6ea;
+      padding: 0 2rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .navbar .logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: #185FA5;
+      letter-spacing: -0.5px;
+    }
+    .navbar .logo span { color: #1D9E75; }
+
+    /* ── HERO ── */
+    .hero {
+      background: linear-gradient(135deg, #185FA5 0%, #0c3d6e 100%);
+      color: #fff;
+      text-align: center;
+      padding: 3rem 1rem 2.5rem;
+    }
+    .hero h1 { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .hero p  { font-size: 1rem; opacity: 0.85; }
+
+    /* ── TABS ── */
+    .tab-bar {
+      display: flex;
+      max-width: 860px;
+      margin: -1.4rem auto 0;
+      background: #fff;
+      border-radius: 14px 14px 0 0;
+      overflow: hidden;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    .tab {
+      flex: 1;
+      padding: 14px 0;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      background: #fff;
+      color: #888;
+      cursor: pointer;
+      transition: all 0.2s;
+      border-bottom: 3px solid transparent;
+    }
+    .tab.active {
+      color: #185FA5;
+      border-bottom: 3px solid #185FA5;
+    }
+
+    /* ── MAIN CONTENT ── */
+    .main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1rem 3rem;
+      background: #fff;
+      border-radius: 0 0 14px 14px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+      min-height: 520px;
+    }
+
+    /* ── SECTION PANELS ── */
+    .panel { display: none; padding: 2rem 0 1rem; }
+    .panel.active { display: block; }
+
+    /* ── CARDS ── */
+    .card {
+      background: #f8fafc;
+      border: 1px solid #e2e6ea;
+      border-radius: 12px;
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    .card-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: #1a1a2e;
+      padding-bottom: 0.75rem;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid #e2e6ea;
+    }
+
+    /* ── FORM FIELDS ── */
+    .field { margin-bottom: 1.1rem; }
+    .field label {
+      display: block;
+      font-size: 13px;
+      font-weight: 500;
+      color: #555;
+      margin-bottom: 6px;
+    }
+    .field input,
+    .field textarea,
+    .field select {
+      width: 100%;
+      padding: 10px 14px;
+      font-size: 14px;
+      border: 1.5px solid #dce1e7;
+      border-radius: 8px;
+      background: #fff;
+      color: #1a1a2e;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      font-family: inherit;
+    }
+    .field input:focus,
+    .field textarea:focus,
+    .field select:focus {
+      border-color: #185FA5;
+      box-shadow: 0 0 0 3px rgba(24,95,165,0.1);
+    }
+    .field textarea { resize: vertical; min-height: 100px; line-height: 1.6; }
+
+    .row-2 {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+    }
+    @media(max-width: 540px) { .row-2 { grid-template-columns: 1fr; } }
+
+    /* ── SKILLS ── */
+    .skill-input-row { display: flex; gap: 8px; }
+    .skill-input-row input { flex: 1; }
+    .add-skill-btn {
+      padding: 10px 16px;
+      font-size: 13px;
+      font-weight: 600;
+      background: #e8f0fb;
+      color: #185FA5;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.15s;
+    }
+    .add-skill-btn:hover { background: #d0e3f5; }
+    .skills-wrap { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 10px; }
+    .skill-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #e8f0fb;
+      color: #0C447C;
+      font-size: 13px;
+      padding: 4px 12px;
+      border-radius: 999px;
+      font-weight: 500;
+    }
+    .skill-tag button {
+      background: none;
+      border: none;
+      cursor: pointer;
+      color: #185FA5;
+      font-size: 15px;
+      line-height: 1;
+      padding: 0;
+    }
+
+    /* ── BUTTONS ── */
+    .btn-primary {
+      width: 100%;
+      padding: 13px;
+      font-size: 15px;
+      font-weight: 600;
+      background: #185FA5;
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: background 0.15s;
+      margin-top: 0.5rem;
+      font-family: inherit;
+    }
+    .btn-primary:hover { background: #0C447C; }
+    .btn-primary.green { background: #1D9E75; }
+    .btn-primary.green:hover { background: #0F6E56; }
+    .btn-secondary {
+      padding: 9px 20px;
+      font-size: 13px;
+      font-weight: 600;
+      background: #fff;
+      color: #185FA5;
+      border: 1.5px solid #185FA5;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .btn-secondary:hover { background: #e8f0fb; }
+
+    /* ── JOB LISTING CARD ── */
+    .job-card {
+      background: #fff;
+      border: 1px solid #e2e6ea;
+      border-radius: 12px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.25rem;
+      transition: box-shadow 0.2s;
+    }
+    .job-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+    .job-card .jc-header { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; flex-wrap: wrap; }
+    .job-card .jc-title { font-size: 17px; font-weight: 700; color: #1a1a2e; }
+    .job-card .jc-company { font-size: 14px; color: #555; margin-top: 3px; }
+    .open-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      background: #EAF3DE;
+      color: #3B6D11;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 999px;
+    }
+    .open-dot { width: 7px; height: 7px; background: #639922; border-radius: 50%; display: inline-block; }
+    .jc-meta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+    .jc-badge {
+      font-size: 12px;
+      background: #f0f4f8;
+      color: #444;
+      padding: 3px 10px;
+      border-radius: 999px;
+      font-weight: 500;
+    }
+    .jc-desc {
+      font-size: 13px;
+      color: #666;
+      line-height: 1.7;
+      margin-top: 12px;
+      border-top: 1px solid #f0f2f5;
+      padding-top: 10px;
+    }
+    .jc-skills-label { font-size: 12px; color: #888; margin: 10px 0 6px; font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; }
+
+    /* ── SUCCESS MSG ── */
+    .success-wrap {
+      text-align: center;
+      padding: 2.5rem 1rem;
+    }
+    .success-icon {
+      width: 60px; height: 60px;
+      background: #EAF3DE;
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      margin: 0 auto 1rem;
+    }
+    .success-wrap h3 { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+    .success-wrap p { font-size: 14px; color: #666; line-height: 1.6; }
+
+    /* ── EMPTY STATE ── */
+    .empty-state {
+      text-align: center;
+      padding: 3rem 1rem;
+      color: #aaa;
+    }
+    .empty-state svg { margin-bottom: 1rem; opacity: 0.4; }
+    .empty-state p { font-size: 14px; }
+
+    hr.divider { border: none; border-top: 1px solid #eee; margin: 1.5rem 0; }
+  </style>
+</head>
 <body>
 
-<h2 style="text-align:center;">All Jobs</h2>
+<!-- NAVBAR -->
+<nav class="navbar">
+  <div class="logo">Work<span>Connect</span></div>
+</nav>
 
-<div id="job-list"></div>
+<!-- HERO -->
+<div class="hero">
+  <h1>Find Jobs. Hire Talent.</h1>
+  <p>Recruiters post jobs. Job seekers apply directly.</p>
+</div>
 
-<script src="/js/script.js"></script>
+<!-- TABS -->
+<div class="tab-bar" style="max-width:860px;margin-left:auto;margin-right:auto;">
+  <button class="tab active" onclick="switchTab('recruiter')">&#128188; Post a Job (Recruiter)</button>
+  <button class="tab" onclick="switchTab('seeker')">&#128269; Browse & Apply (Job Seeker)</button>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+
+  <!-- ── RECRUITER PANEL ── -->
+  <div id="panel-recruiter" class="panel active">
+    <div class="card" id="recruiter-form-card">
+      <div class="card-title">&#128221; Job posting details</div>
+
+      <div class="row-2">
+        <div class="field">
+          <label>Job title *</label>
+          <input id="r-title" type="text" placeholder="e.g. Frontend Developer" />
+        </div>
+        <div class="field">
+          <label>Company name *</label>
+          <input id="r-company" type="text" placeholder="e.g. Infosys Pvt Ltd" />
+        </div>
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label>Location</label>
+          <input id="r-location" type="text" placeholder="e.g. Bhopal / Remote" />
+        </div>
+        <div class="field">
+          <label>Job type</label>
+          <select id="r-type">
+            <option>Full-time</option>
+            <option>Part-time</option>
+            <option>Internship</option>
+            <option>Freelance</option>
+            <option>Contract</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Job description *</label>
+        <textarea id="r-desc" placeholder="Describe responsibilities, requirements, working hours, etc."></textarea>
+      </div>
+
+      <div class="field">
+        <label>Required skills</label>
+        <div class="skill-input-row">
+          <input id="r-skill-input" type="text" placeholder="e.g. React, Python, MS Excel..." onkeydown="if(event.key==='Enter'){addSkill();}" />
+          <button class="add-skill-btn" onclick="addSkill()">+ Add Skill</button>
+        </div>
+        <div class="skills-wrap" id="skills-wrap"></div>
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label>Recruiter contact number *</label>
+          <input id="r-phone" type="tel" placeholder="+91 98765 43210" />
+        </div>
+        <div class="field">
+          <label>Recruiter email</label>
+          <input id="r-email" type="email" placeholder="hr@company.com" />
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="postJob()">&#128640; Post Job Listing</button>
+    </div>
+  </div>
+
+  <!-- ── SEEKER PANEL ── -->
+  <div id="panel-seeker" class="panel">
+    <div id="job-listings-container"></div>
+
+    <div class="card" id="apply-form-card">
+      <div class="card-title">&#128203; Apply for a position</div>
+
+      <div class="field">
+        <label>Select job *</label>
+        <select id="s-job"><option value="">-- Select a job --</option></select>
+      </div>
+
+      <div class="row-2">
+        <div class="field">
+          <label>Your full name *</label>
+          <input id="s-name" type="text" placeholder="e.g. Rahul Sharma" />
+        </div>
+        <div class="field">
+          <label>Phone number *</label>
+          <input id="s-phone" type="tel" placeholder="+91 xxxxxxxxxx" />
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Email address *</label>
+        <input id="s-email" type="email" placeholder="you@example.com" />
+      </div>
+
+      <div class="field">
+        <label>Why should we hire you?</label>
+        <textarea id="s-cover" placeholder="Briefly describe your experience and why you're a good fit..."></textarea>
+      </div>
+
+      <button class="btn-primary green" onclick="submitApplication()">&#9989; Submit Application</button>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<script>
+  // ── STATE ──
+  var jobs = [];
+  var skills = [];
+
+  // ── TAB SWITCH ──
+  function switchTab(tab) {
+    document.querySelectorAll('.tab').forEach(function(t, i) {
+      t.classList.toggle('active', (i === 0 && tab === 'recruiter') || (i === 1 && tab === 'seeker'));
+    });
+    document.getElementById('panel-recruiter').classList.toggle('active', tab === 'recruiter');
+    document.getElementById('panel-seeker').classList.toggle('active', tab === 'seeker');
+    if (tab === 'seeker') renderSeekerPage();
+  }
+
+  // ── ADD SKILL TAG ──
+  function addSkill() {
+    var inp = document.getElementById('r-skill-input');
+    var val = inp.value.trim();
+    if (!val) return;
+    skills.push(val);
+    inp.value = '';
+    renderSkillTags();
+  }
+
+  function removeSkill(i) {
+    skills.splice(i, 1);
+    renderSkillTags();
+  }
+
+  function renderSkillTags() {
+    var wrap = document.getElementById('skills-wrap');
+    wrap.innerHTML = skills.map(function(s, i) {
+      return '<span class="skill-tag">' + s + '<button onclick="removeSkill(' + i + ')">&#215;</button></span>';
+    }).join('');
+  }
+
+  // ── POST JOB ──
+  function postJob() {
+    var title   = document.getElementById('r-title').value.trim();
+    var company = document.getElementById('r-company').value.trim();
+    var desc    = document.getElementById('r-desc').value.trim();
+    var phone   = document.getElementById('r-phone').value.trim();
+
+    if (!title || !company || !desc || !phone) {
+      alert('Please fill in all required fields marked with *');
+      return;
+    }
+
+    jobs.push({
+      title:    title,
+      company:  company,
+      location: document.getElementById('r-location').value.trim(),
+      type:     document.getElementById('r-type').value,
+      desc:     desc,
+      phone:    phone,
+      email:    document.getElementById('r-email').value.trim(),
+      skills:   skills.slice()
+    });
+
+    // Reset form
+    ['r-title','r-company','r-location','r-desc','r-phone','r-email'].forEach(function(id) {
+      document.getElementById(id).value = '';
+    });
+    document.getElementById('r-type').selectedIndex = 0;
+    skills = [];
+    renderSkillTags();
+
+    // Show success
+    var card = document.getElementById('recruiter-form-card');
+    card.innerHTML =
+      '<div class="success-wrap">' +
+        '<div class="success-icon">' +
+          '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+        '</div>' +
+        '<h3>Job Posted Successfully!</h3>' +
+        '<p>Your job listing is now live.<br>Job seekers can view and apply to it from the "Browse & Apply" tab.</p>' +
+        '<br><button class="btn-secondary" onclick="location.reload()">Post Another Job</button>' +
+      '</div>';
+  }
+
+  // ── RENDER SEEKER PAGE ──
+  function renderSeekerPage() {
+    var container = document.getElementById('job-listings-container');
+    var sel = document.getElementById('s-job');
+
+    if (!jobs.length) {
+      container.innerHTML =
+        '<div class="empty-state">' +
+          '<svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/></svg>' +
+          '<p>No jobs posted yet.<br>Ask a recruiter to post a job first.</p>' +
+        '</div>';
+      sel.innerHTML = '<option value="">-- No jobs available --</option>';
+      return;
+    }
+
+    sel.innerHTML = '<option value="">-- Select a job --</option>' +
+      jobs.map(function(j, i) {
+        return '<option value="' + i + '">' + j.title + ' — ' + j.company + '</option>';
+      }).join('');
+
+    container.innerHTML = jobs.map(function(j) {
+      var skillsHtml = j.skills.length
+        ? '<div class="jc-skills-label">Required skills</div><div class="skills-wrap">' +
+            j.skills.map(function(s){ return '<span class="skill-tag">' + s + '</span>'; }).join('') +
+          '</div>'
+        : '';
+      return '<div class="job-card">' +
+        '<div class="jc-header">' +
+          '<div><div class="jc-title">' + j.title + '</div><div class="jc-company">' + j.company + (j.location ? ' &middot; ' + j.location : '') + '</div></div>' +
+          '<span class="open-badge"><span class="open-dot"></span>Open</span>' +
+        '</div>' +
+        '<div class="jc-meta">' +
+          '<span class="jc-badge">' + j.type + '</span>' +
+          (j.phone ? '<span class="jc-badge">&#128222; ' + j.phone + '</span>' : '') +
+          (j.email ? '<span class="jc-badge">&#9993; ' + j.email + '</span>' : '') +
+        '</div>' +
+        skillsHtml +
+        '<div class="jc-desc">' + j.desc + '</div>' +
+      '</div>';
+    }).join('') + '<hr class="divider">';
+  }
+
+  // ── SUBMIT APPLICATION ──
+  function submitApplication() {
+    var name   = document.getElementById('s-name').value.trim();
+    var phone  = document.getElementById('s-phone').value.trim();
+    var email  = document.getElementById('s-email').value.trim();
+    var jobIdx = document.getElementById('s-job').value;
+
+    if (!name || !phone || !email || jobIdx === '') {
+      alert('Please fill in all required fields (*)');
+      return;
+    }
+
+    var job = jobs[parseInt(jobIdx)];
+    var card = document.getElementById('apply-form-card');
+    card.innerHTML =
+      '<div class="success-wrap">' +
+        '<div class="success-icon">' +
+          '<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#1D9E75" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>' +
+        '</div>' +
+        '<h3>Application Submitted!</h3>' +
+        '<p>You have applied for <strong>' + job.title + '</strong> at <strong>' + job.company + '</strong>.<br>The recruiter will contact you on <strong>' + phone + '</strong>.</p>' +
+      '</div>';
+  }
+</script>
 
 </body>
 </html>
